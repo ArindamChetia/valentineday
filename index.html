@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forever & Always ❤️</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#14000b,#3b0017,#5a0026,#2a0013);
+background-size:400% 400%;
+animation:bgMove 25s ease infinite;
+font-family:Arial,Helvetica,sans-serif;
+color:white;
+overflow-x:hidden;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.card-box{
+width:95%;
+max-width:460px;
+background:rgba(10,0,6,0.75);
+border-radius:30px;
+padding:35px;
+text-align:center;
+box-shadow:0 40px 90px rgba(0,0,0,0.8);
+}
+
+.title{
+font-family:"Great Vibes",cursive;
+font-size:48px;
+color:#ffd6e5;
+text-shadow:0 0 30px rgba(255,90,140,0.9);
+}
+
+.btn-love{
+background:linear-gradient(135deg,#ff2f6d,#b0003a);
+border:none;
+border-radius:999px;
+padding:14px 35px;
+color:white;
+font-size:18px;
+margin-top:10px;
+}
+
+#gameArea{
+position:relative;
+height:280px;
+margin-top:20px;
+overflow:hidden;
+}
+
+.heart{
+position:absolute;
+font-size:36px;
+cursor:pointer;
+animation:floatUp 3s linear forwards;
+}
+
+@keyframes floatUp{
+from{transform:translateY(0);opacity:1;}
+to{transform:translateY(-260px);opacity:0;}
+}
+
+#movingHeart{
+position:absolute;
+font-size:45px;
+cursor:pointer;
+}
+
+.star{
+position:fixed;
+color:white;
+font-size:10px;
+animation:twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+from{opacity:0.2;}
+to{opacity:1;}
+}
+
+#ring{
+font-size:70px;
+animation:glowRing 2s infinite alternate;
+}
+
+@keyframes glowRing{
+from{text-shadow:0 0 10px gold;}
+to{text-shadow:0 0 30px gold;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card-box" id="app">
+<div class="title">Priyankaa</div>
+<p class="mt-3">Before forever begins… let's relive something special.</p>
+<button class="btn btn-love mt-4" onclick="start()">Begin ❤️</button>
+</div>
+
+<audio id="music" preload="auto" loop>
+<source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+var app=document.getElementById("app");
+var music=document.getElementById("music");
+var score=0;
+var musicStarted=false;
+
+function startMusic(){
+if(musicStarted) return;
+musicStarted=true;
+music.volume=0;
+music.play().then(function(){
+var v=0;
+var fade=setInterval(function(){
+if(v<0.7){v+=0.02;music.volume=v;}
+else clearInterval(fade);
+},200);
+});
+}
+
+function start(){
+startMusic();
+timeline();
+}
+
+/* 💌 MEMORY TIMELINE */
+function timeline(){
+app.innerHTML=
+'<h3>Our Memories 💌</h3>'+
+'<button class="btn btn-love" onclick="game1()">The First Smile 😊</button>'+
+'<button class="btn btn-love" onclick="game1()">The First Hug 🤗</button>'+
+'<button class="btn btn-love" onclick="game1()">The First "I Love You" ❤️</button>';
+}
+
+/* 🎮 GAME 1 */
+function game1(){
+score=0;
+app.innerHTML=
+'<h3>Catch 8 Hearts ❤️</h3>'+
+'<div id="gameArea"></div>'+
+'<p id="scoreText">0 / 8</p>';
+
+var area=document.getElementById("gameArea");
+
+var interval=setInterval(function(){
+var h=document.createElement("div");
+h.className="heart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*(area.clientWidth-40)+"px";
+h.onclick=function(){
+score++;
+document.getElementById("scoreText").innerHTML=score+" / 8";
+h.remove();
+if(score>=8){clearInterval(interval);quiz();}
+};
+area.appendChild(h);
+setTimeout(function(){h.remove();},3000);
+},600);
+}
+
+/* 🧠 QUIZ */
+function quiz(){
+app.innerHTML=
+'<h3>Love Question 💭</h3>'+
+'<p>Who will always choose you?</p>'+
+'<button class="btn btn-love" onclick="game2()">You ❤️</button>'+
+'<button class="btn btn-love" onclick="game2()">Me ❤️</button>';
+}
+
+/* 🎯 GAME 2 */
+function game2(){
+score=0;
+app.innerHTML=
+'<h3>Find My Heart 💓</h3>'+
+'<div id="gameArea"><div id="movingHeart">❤️</div></div>'+
+'<p id="scoreText">0 / 5</p>';
+
+var heart=document.getElementById("movingHeart");
+var area=document.getElementById("gameArea");
+
+function move(){
+heart.style.top=Math.random()*(area.clientHeight-50)+"px";
+heart.style.left=Math.random()*(area.clientWidth-50)+"px";
+}
+move();
+
+heart.onclick=function(){
+score++;
+document.getElementById("scoreText").innerHTML=score+" / 5";
+if(score>=5){proposal();}
+else move();
+};
+}
+
+/* 💍 PROPOSAL */
+function proposal(){
+confetti({particleCount:400,spread:180});
+app.innerHTML=
+'<div id="ring">💍</div>'+
+'<h2 class="mt-3">Will You Be My Forever?</h2>'+
+'<button class="btn btn-love" onclick="forever()">YES ❤️</button>';
+}
+
+/* 🌌 FOREVER */
+function forever(){
+createStars();
+app.innerHTML=
+'<div class="title">Forever & Always</div>'+
+'<p class="mt-4 fs-5">In every universe, I choose you. Together Forever ♾️</p>'+
+'<button class="btn btn-light mt-3" onclick="save()">📸 Save This Memory</button>'+
+'<button class="btn btn-love mt-2" onclick="toggleMusic()">🎵 Pause / Play</button>';
+}
+
+function createStars(){
+for(var i=0;i<80;i++){
+var s=document.createElement("div");
+s.className="star";
+s.innerHTML="•";
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+document.body.appendChild(s);
+}
+}
+
+function toggleMusic(){
+if(music.paused) music.play();
+else music.pause();
+}
+
+function save(){
+html2canvas(document.body).then(function(canvas){
+var a=document.createElement("a");
+a.download="forever.png";
+a.href=canvas.toDataURL();
+a.click();
+});
+}
+</script>
+
+</body>
+</html>
