@@ -36,11 +36,11 @@ overflow-x:hidden;
 .card-box{
 width:95%;
 max-width:460px;
-background:rgba(10,0,6,0.75);
+background:rgba(10,0,6,0.8);
 border-radius:30px;
 padding:35px;
 text-align:center;
-box-shadow:0 40px 90px rgba(0,0,0,0.8);
+box-shadow:0 40px 100px rgba(0,0,0,0.9);
 }
 
 .title{
@@ -85,6 +85,19 @@ font-size:45px;
 cursor:pointer;
 }
 
+.petal{
+position:fixed;
+top:-10vh;
+font-size:22px;
+opacity:0.6;
+animation:petalFall linear infinite;
+}
+
+@keyframes petalFall{
+from{transform:translateY(-10vh) rotate(0deg);}
+to{transform:translateY(120vh) rotate(360deg);}
+}
+
 .star{
 position:fixed;
 color:white;
@@ -105,6 +118,12 @@ animation:glowRing 2s infinite alternate;
 @keyframes glowRing{
 from{text-shadow:0 0 10px gold;}
 to{text-shadow:0 0 30px gold;}
+}
+
+@keyframes heartbeat{
+0%{transform:scale(1);}
+50%{transform:scale(1.02);}
+100%{transform:scale(1);}
 }
 </style>
 </head>
@@ -145,7 +164,7 @@ startMusic();
 timeline();
 }
 
-/* 💌 MEMORY TIMELINE */
+/* 💌 TIMELINE */
 function timeline(){
 app.innerHTML=
 '<h3>Our Memories 💌</h3>'+
@@ -185,8 +204,8 @@ function quiz(){
 app.innerHTML=
 '<h3>Love Question 💭</h3>'+
 '<p>Who will always choose you?</p>'+
-'<button class="btn btn-love" onclick="game2()">You ❤️</button>'+
-'<button class="btn btn-love" onclick="game2()">Me ❤️</button>';
+'<button class="btn btn-love" onclick="game2()">Me ❤️</button>'+
+'<button class="btn btn-love" onclick="game2()">You ❤️</button>';
 }
 
 /* 🎯 GAME 2 */
@@ -223,9 +242,33 @@ app.innerHTML=
 '<button class="btn btn-love" onclick="forever()">YES ❤️</button>';
 }
 
+/* 🎆 FIREWORKS */
+function launchFireworks(){
+const duration=6000;
+const end=Date.now()+duration;
+
+(function frame(){
+confetti({particleCount:6,angle:60,spread:55,origin:{x:0}});
+confetti({particleCount:6,angle:120,spread:55,origin:{x:1}});
+if(Date.now()<end){requestAnimationFrame(frame);}
+})();
+
+setTimeout(function(){
+confetti({
+particleCount:350,
+spread:180,
+startVelocity:45,
+colors:["#ff2f6d","#ffd6e5","#ffffff","#ffb703"]
+});
+},duration);
+}
+
 /* 🌌 FOREVER */
 function forever(){
 createStars();
+launchFireworks();
+document.body.style.animation="heartbeat 1.3s infinite";
+
 app.innerHTML=
 '<div class="title">Forever & Always</div>'+
 '<p class="mt-4 fs-5">In every universe, I choose you. Together Forever ♾️</p>'+
@@ -234,7 +277,7 @@ app.innerHTML=
 }
 
 function createStars(){
-for(var i=0;i<80;i++){
+for(var i=0;i<100;i++){
 var s=document.createElement("div");
 s.className="star";
 s.innerHTML="•";
